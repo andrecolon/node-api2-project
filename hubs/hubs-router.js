@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const Hubs = require('./hubs-model.js')
+const Posts = require('./hubs-model.js')
 
 
-//server.use('/api/hubs') matches 'api/hubs
+//server.use('/api/posts') matches 'api/posts
 router.get('/', (req, res) => {
-    Hubs.find(req.query)
+    Posts.find(req.query)
         .then(posts => {
             res.status(200).json(posts);
         })
@@ -19,7 +19,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-    Hubs.findById(req.params.id)
+    Posts.findById(req.params.id)
         .then(post => {
             if (post) {
                 res.status(200).json(hub);
@@ -37,7 +37,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    Hubs.add(req.body)
+    Posts.add(req.body)
         .then(post => {
             res.status(201).json(post);
         })
@@ -50,8 +50,22 @@ router.post('/', (req, res) => {
         });
 });
 
+router.post('/api/posts/:id/comments', (req, res) => {
+    Posts.add(req.body)
+        .then(comment => {
+            res.status(201).json(comment);
+        })
+        .catch(error => {
+            // log error to database
+            console.log(error);
+            res.status(500).json({
+                message: 'Error adding the comment',
+            });
+        });
+});
+
 router.delete('/:id', (req, res) => {
-    Hubs.remove(req.params.id)
+    Posts.remove(req.params.id)
         .then(count => {
             if (count > 0) {
                 res.status(200).json({ message: 'The post has been nuked' });
@@ -70,7 +84,7 @@ router.delete('/:id', (req, res) => {
 
 router.put('/:id', (req, res) => {
     const changes = req.body;
-    Hubs.update(req.params.id, changes)
+    Posts.update(req.params.id, changes)
         .then(post => {
             if (post) {
                 res.status(200).json(post);
@@ -90,7 +104,7 @@ router.put('/:id', (req, res) => {
 router.post('/:id/messages', (req, res) => {
     const messageInfo = { ...req.body, hub_id: req.params.id }
     // on the body add a parameter [id] 
-    Hubs.addMessage(messageInfo)
+    Posts.addMessage(messageInfo)
         .then(message => {
             res.status(201).json(message);
         })

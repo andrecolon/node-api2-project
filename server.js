@@ -7,6 +7,9 @@ server.use(express.json());
 // .use matches all HTTP mehods (GET< DELETE< PUT, Whatever)
 //no path matches ALL paths...if you want to use a oath 
 server.use('/api/posts', hubsRouter);
+server.use('/api/posts/:id/comments', hubsRouter);
+//server.use('/api/posts/:id', hubsRouter);
+
 //server.use('/something/anything', hubsRouter)
 //Change the URL here  ^^ mounting syntax
 
